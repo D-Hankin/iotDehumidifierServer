@@ -13,11 +13,13 @@ public class ArduinoObject {
     private String temperature;
     private String humidity;
     private LocalDateTime timestamp;
+    private boolean dehumidifierStatus; 
     
-    public ArduinoObject(String temperature, String humidity, LocalDateTime timestamp) {
+    public ArduinoObject(String temperature, String humidity, LocalDateTime timestamp, boolean dehumidifierStatus) {
         this.temperature = temperature;
         this.humidity = humidity;
         this.timestamp = timestamp;
+        this.dehumidifierStatus = dehumidifierStatus;
     }
 
     public String getTemperature() {
@@ -50,6 +52,14 @@ public class ArduinoObject {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isDehumidifierStatus() {
+        return dehumidifierStatus;
+    }
+
+    public void setDehumidifierStatus(boolean dehumidifierStatus) {
+        this.dehumidifierStatus = dehumidifierStatus;
     }
 
     
