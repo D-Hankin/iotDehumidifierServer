@@ -15,11 +15,7 @@ import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.util.concurrent.Future;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-
 import org.springframework.stereotype.Component;
 
 import com.iotdehumidifier.iotdehumidifier.config.SecConfig;
@@ -27,7 +23,7 @@ import com.iotdehumidifier.iotdehumidifier.config.SecConfig;
 @Component
 public class HueApiClient {
 
-    private static final String hueApiUrl = "https://192.168.1.26/clip/v2/resource/light/c5acd120-bd09-4dee-8763-150a7321a698";
+    private static final String hueApiUrl = "";
     private static final String apiKey = SecConfig.getApiKey(); 
     private static final String caCertPath = "truststore.jks";
 
@@ -39,15 +35,13 @@ public class HueApiClient {
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             try (FileInputStream instream = new FileInputStream(caCertPath)) {
-                trustStore.load(instream, "Mancheste1!".toCharArray());  // use truststore password here
+                trustStore.load(instream, "".toCharArray()); 
             }
 
-            // Create SSLContext with the custom trust store
             SSLContext sslContext = SSLContextBuilder.create()
-                    .loadTrustMaterial(trustStore, (TrustStrategy) (chain, authType) -> true)  // trust everything in truststore
+                    .loadTrustMaterial(trustStore, (TrustStrategy) (chain, authType) -> true)
                     .build();
 
-            // Create HttpAsyncClient with SSLContext
             CloseableHttpAsyncClient client = HttpAsyncClients.custom()
                     .setConnectionManager(PoolingAsyncClientConnectionManagerBuilder.create()
                         .setTlsStrategy(new DefaultClientTlsStrategy(sslContext))

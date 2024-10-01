@@ -4,8 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iotdehumidifier.iotdehumidifier.models.ArduinoObject;
 import com.iotdehumidifier.iotdehumidifier.repositories.TestRepository;
-import com.iotdehumidifier.iotdehumidifier.services.HueService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +21,8 @@ public class ArduinoController {
     @Autowired
     private TestRepository testRepository;
 
-    @Autowired
-    private HueService hueService;
+    // @Autowired
+    // private HueService hueService;
 
     // @GetMapping("/test")
     // public TestResponse testGeString() {
@@ -43,7 +41,8 @@ public class ArduinoController {
         System.out.println("humidity: " + response.getHumidity());
         System.out.println("status: " + response.isDehumidifierStatus());
         response.setTimestamp(LocalDateTime.now());
-        hueService.setDehumidifierStatus(response.getHumidity(), response.isDehumidifierStatus());
+        // hueService.setDehumidifierStatus(response.getHumidity(), response.isDehumidifierStatus());
+        System.out.println(response.getTimestamp());
         return testRepository.insert(response);
     }
 
