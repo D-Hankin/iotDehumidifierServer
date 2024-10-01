@@ -17,14 +17,13 @@ import java.util.concurrent.Future;
 
 import javax.net.ssl.SSLContext;
 import org.springframework.stereotype.Component;
-
-import com.iotdehumidifier.iotdehumidifier.config.SecConfig;
+import com.iotdehumidifier.iotdehumidifier.config.HueApiConfig;
 
 @Component
 public class HueApiClient {
 
     private static final String hueApiUrl = "";
-    private static final String apiKey = SecConfig.getApiKey(); 
+    private static final String apiKey = HueApiConfig.getApiKey(); 
     private static final String caCertPath = "truststore.jks";
 
     public String controlHueSocket(boolean action) {

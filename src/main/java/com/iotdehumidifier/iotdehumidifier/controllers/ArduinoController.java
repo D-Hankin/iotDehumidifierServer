@@ -3,7 +3,7 @@ package com.iotdehumidifier.iotdehumidifier.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iotdehumidifier.iotdehumidifier.models.ArduinoObject;
-import com.iotdehumidifier.iotdehumidifier.repositories.TestRepository;
+import com.iotdehumidifier.iotdehumidifier.repositories.ArduinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ArduinoController {
 
     @Autowired
-    private TestRepository testRepository;
+    private ArduinoRepository arduinoRepository;
 
     // @Autowired
     // private HueService hueService;
@@ -43,12 +43,12 @@ public class ArduinoController {
         response.setTimestamp(LocalDateTime.now());
         // hueService.setDehumidifierStatus(response.getHumidity(), response.isDehumidifierStatus());
         System.out.println(response.getTimestamp());
-        return testRepository.insert(response);
+        return arduinoRepository.insert(response);
     }
 
     @GetMapping("/get-data")
     public List<ArduinoObject> getStats() {
-        return testRepository.findAll();
+        return arduinoRepository.findAll();
     }
     
     
