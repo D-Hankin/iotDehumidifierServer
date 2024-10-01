@@ -1,19 +1,25 @@
 package com.iotdehumidifier.iotdehumidifier.models;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "stats")
-public class TestMongo {
+public class ArduinoObject {
     
     @Id
     private String id;
     private String temperature;
     private String humidity;
+    private LocalDateTime timestamp;
+    private boolean dehumidifierStatus; 
     
-    public TestMongo(String temperature, String humidity) {
+    public ArduinoObject(String temperature, String humidity, LocalDateTime timestamp, boolean dehumidifierStatus) {
         this.temperature = temperature;
         this.humidity = humidity;
+        this.timestamp = timestamp;
+        this.dehumidifierStatus = dehumidifierStatus;
     }
 
     public String getTemperature() {
@@ -38,6 +44,22 @@ public class TestMongo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean isDehumidifierStatus() {
+        return dehumidifierStatus;
+    }
+
+    public void setDehumidifierStatus(boolean dehumidifierStatus) {
+        this.dehumidifierStatus = dehumidifierStatus;
     }
 
     
