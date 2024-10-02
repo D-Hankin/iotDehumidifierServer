@@ -44,9 +44,15 @@ public class UserController {
     }
     
     @PostMapping("/create-account")
-    public User getMethodName(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.insert(user);
+    public ResponseEntity<User> createAccount(@RequestBody User user) {
+        if (user.getUsername() != null && !user.getUsername().isEmpty() && user.getPassword() != null && !user.getPassword().isEmpty()) {
+            
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            User createdUser = userRepository.insert(user);
+            return ResponseEntity.ok(createdUser);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/login")
