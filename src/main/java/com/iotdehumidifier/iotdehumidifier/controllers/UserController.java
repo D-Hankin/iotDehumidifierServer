@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iotdehumidifier.iotdehumidifier.components.JwtCreationComponent;
+import com.iotdehumidifier.iotdehumidifier.components.JwtComponent;
 import com.iotdehumidifier.iotdehumidifier.models.LoginDto;
 import com.iotdehumidifier.iotdehumidifier.models.LoginResponse;
 import com.iotdehumidifier.iotdehumidifier.models.User;
@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:5173")
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
 
     @Autowired
-    JwtCreationComponent jwtCreationComponent;
+    JwtComponent jwtCreationComponent;
 
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -47,12 +47,12 @@ public class UserController {
         return userRepository.insert(user);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginDto user) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    user.getEmail(), 
+                    user.getUsername(), 
                     user.getPassword())
             );
             String token = jwtCreationComponent.createToken(authentication);

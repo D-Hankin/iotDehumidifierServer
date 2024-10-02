@@ -1,27 +1,27 @@
 package com.iotdehumidifier.iotdehumidifier.components;
 
 import java.util.Date;
+import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.iotdehumidifier.iotdehumidifier.config.JwtConfig;
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-public class JwtCreationComponent {
+public class JwtComponent {
 
     
     private final JwtConfig jwtConfig; 
     private final String issuer;
 
-    @Autowired
-    public JwtCreationComponent(JwtConfig jwtConfig) {
+    public JwtComponent(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
         this.issuer = jwtConfig.getJwtIssuer();
 
@@ -48,6 +48,36 @@ public class JwtCreationComponent {
                 .claim("role", "user")
                 .signWith(getSigningKey()) 
                 .compact();
+    }
+
+    public String extractUsername(String token) {
+        return extractUsername(token, Claims::getSubject);
+    }
+
+    private <T> T extractUsername(String token, Function<Claims, T> claimResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+    }
+
+    public boolean validateToken(String token, UserDetails user) {
+        final String username = extractUsername(token);
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractUsername(token, Claims::getExpiration);
     }
     
 }

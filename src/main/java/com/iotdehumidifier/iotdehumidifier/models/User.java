@@ -1,22 +1,27 @@
 package com.iotdehumidifier.iotdehumidifier.models;
 
+import java.util.Collection;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Document(collection = "users")
-public class User {
+public class User implements UserDetails {
     
     @Id
     private String id;
-    private String email;
+    private String username;
     private String password;
+    private Collection<? extends GrantedAuthority> authorities;
 
     public User() {
     }
 
-    public User(String id, String email, String password) {
+    public User(String id, String username, String password) {
         this.id = id;
-        this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -28,12 +33,12 @@ public class User {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -42,6 +47,11 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     

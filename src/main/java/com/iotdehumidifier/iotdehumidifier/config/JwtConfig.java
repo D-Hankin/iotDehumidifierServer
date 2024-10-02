@@ -12,11 +12,18 @@ public class JwtConfig {
     @Value("${JWT_ISSUER}")
     private String jwtIssuer;
 
+    @Value("{ARDUINO_IP}")
+    private String arduinoIp;
+
     public String getPrivateKey() {
         return privateKey;
     }
 
     public String getJwtIssuer() {
         return jwtIssuer;
+    }
+
+    public String getArduinoIp() {
+        return arduinoIp;
     }
 }
