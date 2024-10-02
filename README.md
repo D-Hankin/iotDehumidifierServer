@@ -14,6 +14,7 @@ Features
 -   **Data Handling:** The server stores humidity sensor readings in a MongoDB database.
 -   **Email Notifications:** Sends email alerts when humidity exceeds 55%, prompting users to manually activate their dehumidifier.
 -   **Client Integration:** Provides data to the React/TypeScript client for daily humidity statistics and electricity prices.
+-   **Spring Security and JWTs:** Utilises both Spring Boots own security routines combined with the creation and processing of Json Web Tokens for enhanced user security.
 
 Client and Arduino
 ------------------
