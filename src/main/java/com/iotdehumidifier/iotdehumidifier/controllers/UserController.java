@@ -1,6 +1,8 @@
 package com.iotdehumidifier.iotdehumidifier.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginDto user) {
+    public ResponseEntity<?> login(@RequestBody LoginDto user) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -56,9 +58,11 @@ public class UserController {
                     user.getPassword())
             );
             String token = jwtCreationComponent.createToken(authentication);
-            return new LoginResponse(token);
+            return ResponseEntity.ok(new LoginResponse(token));
         } catch (AuthenticationException e) {
-            return new LoginResponse(e.getMessage());
+        
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body(new LoginResponse("Bad credentials"));
         }
     }
     
