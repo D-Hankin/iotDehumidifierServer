@@ -2,11 +2,15 @@ package com.iotdehumidifier.iotdehumidifier.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iotdehumidifier.iotdehumidifier.components.JwtComponent;
 import com.iotdehumidifier.iotdehumidifier.models.ArduinoObject;
+import com.iotdehumidifier.iotdehumidifier.models.LoginResponse;
 import com.iotdehumidifier.iotdehumidifier.repositories.ArduinoRepository;
 import com.iotdehumidifier.iotdehumidifier.services.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +31,11 @@ public class ArduinoController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private JwtComponent jwtComponent;
+
+    
 
     private boolean mailSent = false;
 
@@ -46,23 +56,23 @@ public class ArduinoController {
 
     @PostMapping("/send-data")
     public ArduinoObject testMongo(@RequestBody ArduinoObject response) {
-        System.out.println("here: " + response.isDehumidifierStatus() + ", " + mailSent);
         response.setTimestamp(LocalDateTime.now());
-        if (mailSent == false && response.isDehumidifierStatus() == true) {
-            System.out.println("then here: " + response.isDehumidifierStatus());
-            mailService.sendMail(response);
-            mailSent = true;
-        } else if (mailSent == true && response.isDehumidifierStatus() == false) {
-            System.out.println("or here: " + response.isDehumidifierStatus());
-            mailSent = false;
-        }
-        // hueService.setDehumidifierStatus(response.getHumidity(), response.isDehumidifierStatus());
         return arduinoRepository.insert(response);
     }
-
+    
     @GetMapping("/get-data")
-    public List<ArduinoObject> getStats() {
-        return arduinoRepository.findAll();
+    public List<ArduinoObject> getStats() {    
+        List<ArduinoObject> statsList = new ArrayList<>();
+        statsList = arduinoRepository.findAll();
+        ArduinoObject latestObject = statsList.get(statsList.size() - 1);
+        System.out.println("mailSent: " + mailSent + ". latestObject: " + latestObject.isDehumidifierStatus());
+        if (mailSent == false && latestObject.isDehumidifierStatus() == true) {
+            boolean success = mailService.sendMail(latestObject);
+            mailSent = success;
+        } else if (mailSent == true && latestObject.isDehumidifierStatus() == false) {
+            mailSent = false;
+        }
+        return statsList;
     }
     
     
