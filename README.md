@@ -38,6 +38,33 @@ How It Works
 3.  **Sending Notifications:** When humidity exceeds 55%, the server sends an email notification using JavaMailSender.
 4.  **Client Interaction:** Data is served to the React client, which displays humidity levels and electricity prices for the day.
 
+### App Flow
+
+1.  **Arduino → Server:**
+
+    -   The Arduino collects environmental data (e.g., humidity levels) from connected sensors.
+    -   This data is transmitted to the server via HTTP requests, using the Arduino's Wi-Fi connection.
+      
+2.  **Server → MongoDB:**
+
+    -   Upon receiving the data, the server processes and stores it in a MongoDB database.
+    -   MongoDB ensures the data is stored in a structured format, enabling easy retrieval for future use.
+      
+3.  **Server → Notification Mail:**
+
+    -   If the Arduino reports a humidity level above 55%, the server sends a notification email to the logged-in user's email address.
+    -   The notification is triggered only once when the condition is met, to avoid repetitive emails.
+      
+4.  **MongoDB → Server:**
+
+    -   The server queries MongoDB to retrieve historical data or the latest statistics as needed.
+    -   This data is used for further processing or for serving the client application.
+      
+5.  **Server → Client:**
+
+    -   The client (built with React and TypeScript) sends requests to the server to retrieve updated information, such as daily statistics or current electricity prices.
+    -   The server responds with the requested data, which is then displayed in the client interface for the user.
+
 Installation and Setup
 ----------------------
 
