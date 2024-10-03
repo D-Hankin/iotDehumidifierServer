@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.iotdehumidifier.iotdehumidifier.models.ArduinoObject;
 
 @Repository
-public interface TestRepository extends MongoRepository<ArduinoObject, String> {
+public interface ArduinoRepository extends MongoRepository<ArduinoObject, String> {
     
 }
